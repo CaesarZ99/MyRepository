@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理</title>
+    <link rel="stylesheet" th:href="@{~/css/bootstrap.min.css}">
+    <style>
+        #changePage label {
+            margin-top: 6px;
+            margin-left: 3px;
+        }
+    </style>
+
+</head>
+<body>
+<form action="/adminCtrl/deleteLogs" method="post">
+    <div class="table-responsive"><!--显示不全可以出现拖动条-->
+        <table class="table table-bordered" style="text-align: center">
+            <thead>
+            <tr>
+                <td colspan="8">
+                    <form class="form" th:action="@{~/adminCtrl/yhgl/search}" method="get">
+                        <label>
+                            <select th:onchange="|searchSel(this.value)|" class="select">
+                                <option value="">--请选择--</option>
+                                <option value="uid">编号</option>
+                                <option value="userName">姓名</option>
+                            </select>
+                            <input class="search" id="searchInput">
+                        </label>
+                        <button class="btn btn-search" type="submit">搜索</button>
+                    </form>
+                </td>
+            </tr>
+            <tr class="active"><!--悬停-->
+                <td><b><input type="checkbox" id="delids" name="delids" value="-1"
+                              onclick="checkStatus()" class="checkbox"></b></td>
+                <td><b>管理员编号</b></td>
+                <td><b>管理员姓名</b></td>
+                <td><b>操作</b></td>
+                <td><b>访问方法</b></td>
+                <td><b>参数</b></td>
+                <td><b>路径</b></td>
+                <td><b>操作时间</b></td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="success" th:each="logs:${session.sysLogs}">
+                <td><input th:value="${logs.logid}" onclick="checkC()" type="checkbox"
+                           name="delids"
+                           id="delid" class="checkbox"></td>
+                <td th:text="${logs.uid}"></td>
+                <td th:text="${logs.username}"></td>
+                <td th:text="${logs.operation}"></td>
+                <td th:text="${logs.method}"></td>
+                <td th:text="${logs.params}"></td>
+                <td th:text="${logs.url}"></td>
+                <td th:text="${logs.createDate}"></td>
+            </tr>
+            <tr>
+                <td id="changePage" colspan="8">
+                    <button type="submit" class="btn btn-danger" style="float: left;margin-left: 5%;width: 150px">删除
+                    </button>
+                    <div class="btn-group btn-group-sm">
+                    <span th:if="${pageInfo.pageNum!=1}">
+                        <button type="button" th:onclick="|startPage(1)|" class="btn btn-default"><span
+                                class="glyphicon glyphicon-fast-backward"></span></button>
+
+                        <button type="button" th:onclick="|prePage(${pageInfo.prePage})|"
+                                class="btn btn-default"><span
+                                class="glyphicon glyphicon-chevron-left"></span>
+                        </button>
+                    </span>
+                        <span th:if="${pageInfo.pageNum!=pageInfo.pages}">
+                        <button type="button" th:onclick="|nxPage(${pageInfo.nextPage})|" class="btn btn-default"><span
+                                class="glyphicon glyphicon-chevron-right"></span></button>
+                        <button type="button" th:onclick="|endPage(${pageInfo.pages})|" class="btn btn-default"><span
+                                class="glyphicon glyphicon-fast-forward"></span>
+                        </button>
+                    </span>
+                        <span>当前页数:<i th:text="${pageInfo.pageNum}"></i></span>
+                        <span>当页可显示条数:<i th:text="${pageInfo.pageSize}"></i></span>
+                        <span>总页数:<i th:text="${pageInfo.pages}"></i></span>
+                        <span>总条数:<i th:text="${pageInfo.total}"></i></span>
+                        <span><b>跳转到第</b><input class="search-input" style="width: 30px" type="search" id="go"/>页
+                        <button class="btn btn-purple" th:onclick="|goto()|"><span
+                                class="glyphicon glyphicon-ok"></span></button>
+                    </span>
+                        <span><select id="sel" th:onchange="|selectPageSize(this.value)|">
+                        <option value="">
+                            当前页显示条数
+                        </option>
+                        <option value="5">
+                            ----5----
+                        </option>
+                        <option value="10">
+                            ----10----
+                        </option>
+                        <option value="15">
+                            ----15----
+                        </option>
+                    </select></span>
+                    </div>
+                    <button type="button" class="btn btn-danger" style="float: right;margin-right: 5%;width: 150px">清空
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</form>
+<script th:src="@{~/js/jquery-3.1.1.min.js}"></script>
+<script th:src="@{~/js/checkAll.js}"></script>
+<script th:src="@{~/js/bootstrap.min.js}"></script>
+<script th:src="@{~/js/userList.js}"></script>
+<script>
+    function searchSel(value) {
+        $('#searchInput').attr('name', value);
+    }
+
+    function search() {
+        setStorage('');
+    }
+
+
+</script>
+</body>
+</html>

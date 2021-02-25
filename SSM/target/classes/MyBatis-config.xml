@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 框架基本配置 -->
+	<settings>
+		<setting name="logImpl" value="STDOUT_LOGGING"/>
+		<setting name="useGeneratedKeys" value="true" /><!-- 让mybatis帮助产生主键值 -->
+	</settings>
+	<!-- 别名 -->
+	<typeAliases>
+		<!-- <typeAlias type="com.chinasofti.pojo.Student" alias="student"/> -->
+		<package name="com.chinasofti.pojo"/><!-- 示例：Student -》student -->
+	</typeAliases>
+	<!-- 分页插件 -->
+	<plugins>
+		<plugin interceptor="com.github.pagehelper.PageInterceptor">
+			<!--reasonable：分页合理化参数，默认值为false,直接根据参数进行查询。
+			  当该参数设置为 true 时，pageNum<=0 时会查询第一页， pageNum>pages（超过总数时），会查询最后一页。-->
+			<property name="reasonable" value="true"/>
+		</plugin>
+	</plugins>
+	
+	
+	<mappers>
+		<mapper resource="com/chinasofti/mapper/UsersMapper.xml" />
+		<mapper resource="com/chinasofti/mapper/PowerMapper.xml" />
+		<mapper resource="com/chinasofti/mapper/RoleMapper.xml" />
+		<mapper resource="com/chinasofti/mapper/CompanyMapper.xml" />
+		<mapper resource="com/chinasofti/mapper/RevisitMapper.xml" />
+		<mapper resource="com/chinasofti/mapper/CustomerMapper.xml" />
+		<mapper resource="com/chinasofti/mapper/WareMapper.xml" />
+	</mappers>
+	<!-- 插件 -->
+</configuration>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理</title>
+    <link rel="stylesheet" th:href="@{~/css/bootstrap.min.css}">
+    <style>
+        #changePage label {
+            margin-top: 6px;
+            margin-left: 3px;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="table-responsive"><!--显示不全可以出现拖动条-->
+    <table class="table table-bordered" style="text-align: center">
+        <thead>
+        <tr>
+            <td colspan="8">
+                <div class="btn-group btn-group-xs">
+                    <button type="button" th:onclick="|allUser()|" class="btn btn-default">全部用户
+                    </button>
+                    <button type="button" th:onclick="|wdj()|" class="btn btn-default">未冻结用户</button>
+                    <button type="button" th:onclick="|ydj()|" class="btn btn-default">已冻结用户</button>
+                </div>
+                <form class="form" th:action="@{~/adminCtrl/yhgl/search}" method="get">
+                    <label>
+                        <select th:onchange="|searchSel(this.value)|" class="select">
+                            <option value="">--请选择--</option>
+                            <option value="uid">编号</option>
+                            <option value="userName">姓名</option>
+                        </select>
+                        <input class="search" id="searchInput">
+                    </label>
+                    <button class="btn btn-search" type="submit">搜索</button>
+                </form>
+            </td>
+        </tr>
+        <tr class="active"><!--悬停-->
+            <td><b><input type="checkbox" id="delids" name="delids" value="-1"
+                          onclick="checkStatus()" class="checkbox"></b></td>
+            <td><b>用户编号</b></td>
+            <td><b>姓名</b></td>
+            <td><b>年龄</b></td>
+            <td><b>性别</b></td>
+            <td><b>用户类别</b></td>
+            <td><b>用户状态</b></td>
+            <td><b>操作</b></td>
+        </tr>
+        </thead>
+        <tbody>
+        <form action="/adminCtrl/deleteUsers" method="post">
+            <tr class="success" th:each="user:${session.ulist}">
+
+                <td><input th:if="${user.role.rolename!='管理员'}" th:value="${user.uid}" onclick="checkC()"
+                           type="checkbox"
+                           name="delids"
+                           id="delid" class="checkbox"></td>
+                <td th:text="${user.uid}">ssssss</td>
+                <td th:text="${user.userName}"></td>
+                <td th:text="${user.age}"></td>
+                <td th:text="${user.gender==1?'男':'女'}"></td>
+                <td th:text="${user.role.rolename}"></td>
+                <td th:text="${user.state==1?'未冻结':'已冻结'}"></td>
+                <td>
+                    <div class="btn-group btn-group-xs">
+                        <button th:if="${user.role.rolename!='管理员'}" th:value="${user.uid}" type="button"
+                                onclick="acup(this.value)" class="btn btn-default">
+                            重置密码
+                        </button>
+                        <button type="button" th:value="${user.uid}" class="btn btn-default">修改</button>
+                        <button th:if="${user.role.rolename!='管理员'&& user.state==1}" th:value="${user.uid}"
+                                onclick="banUser(this.value)" type="button"
+                                class="btn btn-danger">冻结
+                        </button>
+                        <button th:if="${user.role.rolename!='管理员'&& user.state==2}" th:value="${user.uid}"
+                                onclick="unBanUser(this.value)" type="button"
+                                class="btn btn-danger">解冻
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td id="changePage" colspan="8">
+                    <button type="submit" class="btn btn-danger" style="float: left;margin-left: 5%;width: 150px">删除
+                    </button>
+                    <div class="btn-group btn-group-sm">
+                    <span th:if="${pageInfo.pageNum!=1}">
+                        <button type="button" th:onclick="|startPage(1)|" class="btn btn-default"><span
+                                class="glyphicon glyphicon-fast-backward"></span></button>
+
+                        <button type="button" th:onclick="|prePage(${pageInfo.prePage})|"
+                                class="btn btn-default"><span
+                                class="glyphicon glyphicon-chevron-left"></span>
+                        </button>
+                    </span>
+                        <span th:if="${pageInfo.pageNum!=pageInfo.pages}">
+                        <button type="button" th:onclick="|nxPage(${pageInfo.nextPage})|" class="btn btn-default"><span
+                                class="glyphicon glyphicon-chevron-right"></span></button>
+                        <button type="button" th:onclick="|endPage(${pageInfo.pages})|" class="btn btn-default"><span
+                                class="glyphicon glyphicon-fast-forward"></span>
+                        </button>
+                    </span>
+                        <span>当前页数:<i th:text="${pageInfo.pageNum}"></i></span>
+                        <span>当页可显示条数:<i th:text="${pageInfo.pageSize}"></i></span>
+                        <span>总页数:<i th:text="${pageInfo.pages}"></i></span>
+                        <span>总条数:<i th:text="${pageInfo.total}"></i></span>
+                        <span><b>跳转到第</b><input class="search-input" style="width: 30px" type="search" id="go"/>页
+                        <button class="btn btn-purple" type="button" th:onclick="|goto()|"><span
+                                class="glyphicon glyphicon-ok"></span></button>
+                    </span>
+                        <span>
+                    <select id="sel" th:onchange="|selectPageSize(this.value)|">
+                        <option value="">
+                            当前页显示条数
+                        </option>
+                        <option value="5">
+                            ----5----
+                        </option>
+                        <option value="10">
+                            ----10----
+                        </option>
+                    </select></span>
+                    </div>
+                    <button type="button" class="btn btn-info" style="float: right;margin-right: 5%;width: 150px">添加
+                    </button>
+                </td>
+            </tr>
+        </form>
+        </tbody>
+    </table>
+</div>
+
+<script th:src="@{~/js/jquery-3.1.1.min.js}"></script>
+<script th:src="@{~/js/checkAll.js}"></script>
+<script th:src="@{~/js/bootstrap.min.js}"></script>
+<script th:src="@{~/js/userList.js}"></script>
+<script>
+    function searchSel(value) {
+        $('#searchInput').attr('name', value);
+    }
+
+    function search() {
+        setStorage('');
+    }
+
+    //管理员重置用户密码操作
+    function acup(value) {
+        $.ajax({
+            url: '/adminCtrl/acup',
+            data: {
+                uid: value,
+                pwd: '666666'
+            },
+            type: 'POST',
+            success: function (res) {
+                if (res.state === 200) {
+                    alert(res.message + ",用户密码已成功重置为:666666");
+                }
+            }
+        })
+    }
+
+    //管理员冻结用户
+    function banUser(value) {
+        $.ajax({
+            url: '/adminCtrl/banUser',
+            data: {
+                uid: value,
+            },
+            type: 'POST',
+            success: function (res) {
+                if (res.state === 200) {
+                    alert(res.message);
+                    window.location.href = getStorage() + '?pageSize=' + getPageSize();
+                }
+            }
+        })
+    }
+
+    //管理员解冻用户
+    function unBanUser(value) {
+        $.ajax({
+            url: '/adminCtrl/unBanUser',
+            data: {
+                uid: value,
+            },
+            type: 'POST',
+            success: function (res) {
+                if (res.state === 200) {
+                    alert(res.message);
+                    window.location.href = getStorage() + '?pageSize=' + getPageSize();
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>

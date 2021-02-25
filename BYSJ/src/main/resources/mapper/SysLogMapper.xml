@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lwk.bysj.mapper.SysLogMapper" >
+  <resultMap id="BaseResultMap" type="com.lwk.bysj.pojo.SysLog" >
+    <id column="log_id" property="logid" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="user_name" property="username" jdbcType="VARCHAR" />
+    <result column="operation" property="operation" jdbcType="VARCHAR" />
+    <result column="method" property="method" jdbcType="VARCHAR" />
+    <result column="params" property="params" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    log_id ,uid, user_name,operation,method, params, url,create_date
+  </sql>
+
+  <insert id="saveLog" parameterType="sysLog">
+    insert into tb_syslog ( uid, user_name,operation,
+                           url, method, params,create_date
+    )
+    values ( #{uid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR},
+            #{operation},#{url,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR}, #{params,jdbcType=VARCHAR},#{createDate}
+           )
+  </insert>
+
+  <select id="selectAllLog" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from tb_syslog order by log_id desc
+
+  </select>
+
+  <delete id="deleteByLogIds">
+    delete from tb_syslog where log_id in
+    <foreach item="item" collection="array" open="(" separator="," close=")">
+      ${item}
+    </foreach>
+  </delete>
+</mapper>

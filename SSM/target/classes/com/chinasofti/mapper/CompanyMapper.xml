@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chinasofti.mapper.CompanyMapper">
+	<resultMap id="BaseResultMap"
+		type="com.chinasofti.pojo.Company">
+		<id column="comId" property="comid" jdbcType="INTEGER" />
+		<result column="comName" property="comname" jdbcType="VARCHAR" />
+		<result column="comLia" property="comlia" jdbcType="VARCHAR" />
+		<result column="comPhone" property="comphone"
+			jdbcType="VARCHAR" />
+		<result column="comZip" property="comzip" jdbcType="VARCHAR" />
+		<result column="comLoc" property="comloc" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		comId, comName, comLia, comPhone, comZip, comLoc
+	</sql>
+	<select id="selectAllCompanysInfo" resultMap="BaseResultMap"
+		parameterType="com.chinasofti.pojo.Company">
+		select
+		<include refid="Base_Column_List" />
+		from tb_company
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from tb_company
+		where comId = #{comid,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.chinasofti.pojo.Company">
+		insert into tb_company (comName, comLia,
+		comPhone, comZip, comLoc
+		)
+		values (#{comname,jdbcType=VARCHAR}, #{comlia,jdbcType=VARCHAR},
+		#{comphone,jdbcType=VARCHAR}, #{comzip,jdbcType=VARCHAR},
+		#{comloc,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.chinasofti.pojo.Company">
+		insert into tb_company
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="comid != null">
+				comId,
+			</if>
+			<if test="comname != null">
+				comName,
+			</if>
+			<if test="comlia != null">
+				comLia,
+			</if>
+			<if test="comphone != null">
+				comPhone,
+			</if>
+			<if test="comzip != null">
+				comZip,
+			</if>
+			<if test="comloc != null">
+				comLoc,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="comid != null">
+				#{comid,jdbcType=INTEGER},
+			</if>
+			<if test="comname != null">
+				#{comname,jdbcType=VARCHAR},
+			</if>
+			<if test="comlia != null">
+				#{comlia,jdbcType=VARCHAR},
+			</if>
+			<if test="comphone != null">
+				#{comphone,jdbcType=VARCHAR},
+			</if>
+			<if test="comzip != null">
+				#{comzip,jdbcType=VARCHAR},
+			</if>
+			<if test="comloc != null">
+				#{comloc,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.chinasofti.pojo.Company">
+		update tb_company
+		<set>
+			<if test="comname != null">
+				comName = #{comname,jdbcType=VARCHAR},
+			</if>
+			<if test="comlia != null">
+				comLia = #{comlia,jdbcType=VARCHAR},
+			</if>
+			<if test="comphone != null">
+				comPhone = #{comphone,jdbcType=VARCHAR},
+			</if>
+			<if test="comzip != null">
+				comZip = #{comzip,jdbcType=VARCHAR},
+			</if>
+			<if test="comloc != null">
+				comLoc = #{comloc,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where comId = #{comid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.chinasofti.pojo.Company">
+		update tb_company
+		set comName = #{comname,jdbcType=VARCHAR},
+		comLia = #{comlia,jdbcType=VARCHAR},
+		comPhone = #{comphone,jdbcType=VARCHAR},
+		comZip = #{comzip,jdbcType=VARCHAR},
+		comLoc = #{comloc,jdbcType=VARCHAR}
+		where comId = #{comid,jdbcType=INTEGER}
+	</update>
+
+	<!-- 批量删除 -->
+	<delete id="deleteCompanys">
+		delete from tb_company where comId in
+		<foreach item="item" collection="array" open="(" separator=","
+			close=")">
+			${item}
+		</foreach>
+	</delete>
+
+
+	<select id="selectCompanyByCondition"
+		parameterType="com.chinasofti.pojo.Company" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_company
+		<where>
+			<if test="comname != null">
+				comName = #{comname,jdbcType=VARCHAR}
+			</if>
+			<if test="comlia != null">
+				comLia = #{comlia,jdbcType=VARCHAR}
+			</if>
+			<if test="comphone != null">
+				comPhone = #{comphone,jdbcType=VARCHAR}
+			</if>
+			<if test="comzip != null">
+				comZip = #{comzip,jdbcType=VARCHAR}
+			</if>
+			<if test="comloc != null">
+				comLoc = #{comloc,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+</mapper>

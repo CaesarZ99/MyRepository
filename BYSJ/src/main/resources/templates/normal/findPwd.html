@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>找回密码</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        #e, #idNum,#userName, #p {
+            width: 248px;
+        }
+
+        label{
+            color: white;
+        }
+
+        form {
+            width: 80%;
+            margin: 0 auto;
+            margin-top: 15%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url("image/findPwdView.png");
+            background-repeat: no-repeat;
+            background-size: 100%;
+        }
+    </style>
+</head>
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+
+</script>
+<body>
+<form action="" method="post" class="form-horizontal" role="form">
+    <div class="form-group">
+        <label class="col-sm-offset-3 col-sm-2 control-label">请输入账号</label>
+        <div class="col-sm-4">
+            <input id="e" name="account" type="text" class="form-control"
+                   placeholder="Account">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-offset-3 col-sm-2 control-label">请输入邮箱</label>
+        <div class="col-sm-4">
+            <input id="p" type="email" name="email" class="form-control"
+                   placeholder="email">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-offset-3 col-sm-2 control-label">请输入真实姓名</label>
+        <div class="col-sm-4">
+            <input id="userName" type="text" name="userName" class="form-control"
+                   placeholder="tureName">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-offset-3 col-sm-2 control-label">请输入身份证号</label>
+        <div class="col-sm-4">
+            <input id="idNum" type="text" name="idNum" class="form-control"
+                   placeholder="idNum">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-5 col-sm-2">
+            <button type="button" onclick="history.back()" class="btn btn-default">返回</button>
+            <button type="button" onclick="findPwd()" style="float: right;" class="btn btn-primary">确认</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+    function findPwd() {
+        param={
+            account : $("#e").val(),
+            email : $("#p").val(),
+            userName : $("#userName").val(),
+            idNum : $("#idNum").val()
+        };
+        $.ajax({
+            url: 'loginCtrl/findPwd',
+            type: 'post',
+            data: param,
+            success: function (res) {
+                if (res.state === 200){
+                    alert(res.message);
+                    window.location.href="/repassword";
+                }else{
+                    alert(res.message);
+                    window.location.reload();
+                }
+
+            }
+        });
+
+    }
+
+</script>
+</body>
+</html>

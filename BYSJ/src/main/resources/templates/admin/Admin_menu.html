@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员主页</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        div {
+            margin: 0;
+            padding: 0;
+        }
+
+        iframe {
+            width: 100%;
+            padding: 0;
+            height: 700px;
+            margin: 0;
+        }
+
+        #systemSetting li {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-inverse" style="padding: 0; margin: 0"
+     role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <label class="navbar-brand">管理员:</label><span
+                class="navbar-brand"><shiro:principal property="userName"></shiro:principal></span>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav" id="mytab">
+                <li class="active"><a href="">Link</a></li>
+                <li><a href="">Link</a></li>
+                <li><a th:href="@{/}">回到主页面</a></li>
+            </ul>
+
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown"><a href="#" class="dropdown-toggle"
+                                        data-toggle="dropdown">更多选项<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="/adminCtrl/quit">注销登录</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2" style="margin: 0; padding: 0">
+            <ul id="main-nav" class="nav nav-tabs nav-stacked" style="">
+                <li class="active"><a href="#"> <i
+                        class="glyphicon glyphicon-th-large"></i> 首页
+                </a></li>
+                <li><a href="#systemSetting" class="nav-header collapsed"
+                       data-toggle="collapse"> <i class="glyphicon glyphicon-cog"></i>
+                    系统管理 <span class="pull-right glyphicon glyphicon-chevron-down"></span>
+                </a>
+                    <ul id="systemSetting" class="nav nav-list collapse secondmenu"
+                        style="height: 0;">
+                        <li><a href="/adminCtrl/yhgl" onclick="saveURL(this)" id="userManage" target="_main"><i
+                                class="glyphicon glyphicon-user"></i>用户管理</a>
+                        </li>
+                        <li><a href="#" target="_main"><i class="glyphicon glyphicon-th-list"></i>菜单管理</a></li>
+                        <li><a href="#" target="_main"><i class="glyphicon glyphicon-asterisk"></i>角色管理</a>
+                        </li>
+                        <li><a href="#" data-toggle="modal"
+                               data-target="#updatePwdModal"><i
+                                class="glyphicon glyphicon-edit"></i>修改密码</a></li>
+                        <li><a href="/adminCtrl/syslog" target="_main" onclick="saveURL(this)"><i
+                                class="glyphicon glyphicon-eye-open"></i>日志查看</a></li>
+                    </ul>
+                </li>
+                <li><a href="#"> <i
+                        class="glyphicon glyphicon-credit-card"></i> 物料管理
+                </a></li>
+                <li><a href="#"> <i class="glyphicon glyphicon-globe"></i>
+                    分发配置 <span class="label label-warning pull-right">0</span>
+                </a></li>
+                <li><a href="#" target="_main"> <i
+                        class="glyphicon glyphicon-calendar"></i> 图表统计
+                </a></li>
+                <li><a href="#"> <i class="glyphicon glyphicon-fire"></i>
+                    关于系统
+                </a></li>
+            </ul>
+        </div>
+
+
+        <div class="col-md-10">
+            <iframe width='100%' name="_main" id="myiframe" scrolling="no" frameborder="0" src=""></iframe>
+        </div>
+    </div>
+    <nav class="navbar navbar-default navbar-fixed-bottom"
+         role="navigation">
+        <ol class="breadcrumb">
+            <li><a href="">Homex</a></li>
+            <li><a href="">Library</a></li>
+            <li><a href="">Data</a></li>
+        </ol>
+    </nav>
+</div>
+
+<!-- 模态框 -->
+<div class="modal fade" id="updatePwdModal" style="margin-top: 100px">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- 模态框头部 -->
+            <div class="modal-header">
+                <h4 class="modal-title">修改密码</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- 模态框主体 -->
+            <div class="modal-body">
+                <form role="form" class="form">
+                    <label>原密码:</label><input placeholder="old-password"
+                                              type="password" class="form-control" id="oldPwd"/><br/>
+                    <label>新密码:</label><input
+                        class="form-control" placeholder="new-password" type="password"
+                        id="newPwd"/><br/> <label>确认新密码:</label><input
+                        type="password" class="form-control" placeholder="sub-password"
+                        id="subPwd"/><br/> <br> <input type="button"
+                                                       onclick="updatePwd()" class="btn btn-info" style="width: 100%"
+                                                       value="提交"/>
+                </form>
+            </div>
+            <!-- 模态框底部 -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/userList.js}"></script>
+<script>
+    function saveURL(param) {
+        var url = $(param).attr('href');
+        window.localStorage.setItem('url', url);
+    }
+
+    $('#userManage').click(function () {
+        setPageSize(5);
+        window.localStorage.setItem('url', '/adminCtrl/yhgl');
+    })
+
+    $("#mytab a").click(function (e) {
+        $(this).tab("show");
+    })
+
+    function updatePwd() {
+        param = {
+            oldPwd: $("#oldPwd").val(),
+            newPwd: $("#newPwd").val(),
+            subPwd: $("#subPwd").val()
+        }
+        $.ajax({
+            url: 'loginCtrl/updatePwd',
+            type: 'post',
+            data: param,
+            success: function (res) {
+                if (res.state === 200) {
+                    alert(res.message);
+                    $('#updatePwdModal').modal('hide');
+                } else {
+                    alert(res.message);
+                }
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

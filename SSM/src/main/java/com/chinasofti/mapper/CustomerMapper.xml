@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chinasofti.mapper.CustomerMapper" >
+  <resultMap id="BaseResultMap" type="com.chinasofti.pojo.Customer" >
+    <id column="cusId" property="cusid" jdbcType="INTEGER" />
+    <result column="cusName" property="cusname" jdbcType="VARCHAR" />
+    <result column="cusGender" property="cusgender" jdbcType="VARCHAR" />
+    <result column="cusPhone" property="cusphone" jdbcType="VARCHAR" />
+    <result column="cusCid" property="cuscid" jdbcType="VARCHAR" />
+    <result column="cusLoc" property="cusloc" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    cusId, cusName, cusGender, cusPhone, cusCid, cusLoc
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_customer
+    where cusId = #{cusid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_customer
+    where cusId = #{cusid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chinasofti.pojo.Customer" >
+    insert into tb_customer (cusName, cusGender, 
+      cusPhone, cusCid, cusLoc
+      )
+    values (#{cusname,jdbcType=VARCHAR}, #{cusgender,jdbcType=VARCHAR}, 
+      #{cusphone,jdbcType=VARCHAR}, #{cuscid,jdbcType=VARCHAR}, #{cusloc,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.chinasofti.pojo.Customer" >
+    insert into tb_customer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cusid != null" >
+        cusId,
+      </if>
+      <if test="cusname != null" >
+        cusName,
+      </if>
+      <if test="cusgender != null" >
+        cusGender,
+      </if>
+      <if test="cusphone != null" >
+        cusPhone,
+      </if>
+      <if test="cuscid != null" >
+        cusCid,
+      </if>
+      <if test="cusloc != null" >
+        cusLoc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cusid != null" >
+        #{cusid,jdbcType=INTEGER},
+      </if>
+      <if test="cusname != null" >
+        #{cusname,jdbcType=VARCHAR},
+      </if>
+      <if test="cusgender != null" >
+        #{cusgender,jdbcType=VARCHAR},
+      </if>
+      <if test="cusphone != null" >
+        #{cusphone,jdbcType=VARCHAR},
+      </if>
+      <if test="cuscid != null" >
+        #{cuscid,jdbcType=VARCHAR},
+      </if>
+      <if test="cusloc != null" >
+        #{cusloc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chinasofti.pojo.Customer" >
+    update tb_customer
+    <set >
+      <if test="cusname != null" >
+        cusName = #{cusname,jdbcType=VARCHAR},
+      </if>
+      <if test="cusgender != null" >
+        cusGender = #{cusgender,jdbcType=VARCHAR},
+      </if>
+      <if test="cusphone != null" >
+        cusPhone = #{cusphone,jdbcType=VARCHAR},
+      </if>
+      <if test="cuscid != null" >
+        cusCid = #{cuscid,jdbcType=VARCHAR},
+      </if>
+      <if test="cusloc != null" >
+        cusLoc = #{cusloc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where cusId = #{cusid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chinasofti.pojo.Customer" >
+    update tb_customer
+    set cusName = #{cusname,jdbcType=VARCHAR},
+      cusGender = #{cusgender,jdbcType=VARCHAR},
+      cusPhone = #{cusphone,jdbcType=VARCHAR},
+      cusCid = #{cuscid,jdbcType=VARCHAR},
+      cusLoc = #{cusloc,jdbcType=VARCHAR}
+    where cusId = #{cusid,jdbcType=INTEGER}
+  </update>
+  <select id="selectCustomerByConditions" parameterType="com.chinasofti.pojo.Customer" resultMap="BaseResultMap">
+   select <include refid="Base_Column_List" /> from tb_customer <where>
+   <if test="cusname != null" >
+        cusName = #{cusname,jdbcType=VARCHAR}
+      </if>
+      <if test="cusgender != null" >
+        cusGender = #{cusgender,jdbcType=VARCHAR}
+      </if>
+      <if test="cusphone != null" >
+        cusPhone = #{cusphone,jdbcType=VARCHAR}
+      </if>
+      <if test="cuscid != null" >
+        cusCid = #{cuscid,jdbcType=VARCHAR}
+      </if>
+      <if test="cusloc != null" >
+        cusLoc = #{cusloc,jdbcType=VARCHAR}
+      </if> 
+      </where>
+  </select>
+  
+  <select id="selectCustomers" resultType="com.chinasofti.pojo.Customer">
+  	select <include refid="Base_Column_List" /> from tb_customer
+  </select>
+  
+  <!-- 批量删除 -->
+	<delete id="deleteCustomers">
+		delete from tb_customer where cusId in
+		<foreach item="item" collection="array" open="(" separator=","
+			close=")">
+			${item}
+		</foreach>
+	</delete>
+  
+</mapper>

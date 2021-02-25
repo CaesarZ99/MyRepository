@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chinasofti.mapper.PowerMapper" >
+  <resultMap id="BaseResultMap" type="com.chinasofti.pojo.Power" >
+    <id column="powerId" property="powerid" jdbcType="INTEGER" />
+    <result column="powerName" property="powername" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    powerId, powerName
+  </sql>
+  
+  <select id="selectAllPowers" resultType="com.chinasofti.pojo.Power">
+  	select powerId,powerName from tb_power
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_power
+    where powerId = #{powerid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_power
+    where powerId = #{powerid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chinasofti.pojo.Power" >
+    insert into tb_power (powerId, powerName)
+    values (#{powerid,jdbcType=INTEGER}, #{powername,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.chinasofti.pojo.Power" >
+    insert into tb_power
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="powerid != null" >
+        powerId,
+      </if>
+      <if test="powername != null" >
+        powerName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="powerid != null" >
+        #{powerid,jdbcType=INTEGER},
+      </if>
+      <if test="powername != null" >
+        #{powername,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chinasofti.pojo.Power" >
+    update tb_power
+    <set >
+      <if test="powername != null" >
+        powerName = #{powername,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where powerId = #{powerid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chinasofti.pojo.Power" >
+    update tb_power
+    set powerName = #{powername,jdbcType=VARCHAR}
+    where powerId = #{powerid,jdbcType=INTEGER}
+  </update>
+  
+  
+  <!--批量删除  -->
+  <delete id="deletePowerByIds">
+  	delete from tb_power where powerid in 
+  	<foreach item="item" collection="array" open="(" separator="," close=")">
+  		${item}
+  	</foreach>
+  </delete>
+</mapper>
